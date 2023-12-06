@@ -2,6 +2,20 @@ from django.db import models
 
 
 class Agent(models.Model):
+    MOOD_CHOICES = [
+        ('happy', 'Летающий счастье'),
+        ('sad', 'Мимолетная грусть'),
+        ('excited', 'Буря эмоций'),
+        ('calm', 'Спокойный океан'),
+        ('angry', 'Ярость внутри'),
+        ('confused', 'Загадочная путаница'),
+        ('surprised', 'Неожиданный восторг'),
+        ('content', 'Довольство моментом'),
+        ('bored', 'Скучающая рутина'),
+        ('grateful', 'Благодарность сердца'),
+        ('hungry', 'Гастрономическое волнение'),
+    ]
+
     name = models.CharField(
         max_length=255,
         verbose_name='Агент',
@@ -9,6 +23,11 @@ class Agent(models.Model):
         unique=True,
         blank=False,
         null=False,
+    )
+    mood = models.CharField(
+        max_length=50,
+        choices=MOOD_CHOICES,
+        default='hungry'
     )
 
     def __str__(self) -> str:
@@ -31,21 +50,11 @@ class Queue(models.Model):
         blank=False,
         null=False,
     )
-    agent = models.ForeignKey(
+    agents = models.ManyToManyField(
         Agent,
-        on_delete=models.CASCADE,
-        verbose_name='Агент',
-        blank=False,
-        null=False,
+        verbose_name='Агенты',
+        blank=True,
     )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'agent'],
-                name='unique_agent'
-            )
-        ]
 
     def __str__(self) -> str:
         return self.name

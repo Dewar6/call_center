@@ -11,14 +11,11 @@ class AgentSerializer(serializers.ModelSerializer):
 
 
 class QueueSerializer(serializers.ModelSerializer):
-    agent = serializers.PrimaryKeyRelatedField(
-        queryset=Agent.objects.all(),
-        write_only=True
-    )
-    agent_name = serializers.StringRelatedField(
-        source='agent',
-        read_only=True
-    )
+    agents = serializers.PrimaryKeyRelatedField(
+            queryset=Agent.objects.all(),
+            many=True,
+            required=False,
+        )
 
     class Meta:
         model = Queue
@@ -26,7 +23,17 @@ class QueueSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'skill',
-            'agent',
-            'agent_name'
+            'agents',
         )
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        agents = representation.get('agents')
+
+        if agents:
+            return representation
+        else:
+            return {'id': representation['id'],
+                    'name': representation['name'],
+                    'skill': representation['skill'],
+                    'agents': 'В данный момент нет активных агентов',}

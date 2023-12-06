@@ -11,17 +11,6 @@ class QueueViewSet(viewsets.ModelViewSet):
     queryset = Queue.objects.all()
     serializer_class = QueueSerializer
 
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        agent_id = data.get('agent', None)
-
-        if Queue.objects.filter(agent_id=agent_id).exists():
-            return Response(
-                {'detail': 'Этот агент уже участвует в другой очереди'}
-            )
-
-        return super().create(request, *args, **kwargs)
-
 
 class AgentViewSet(viewsets.ModelViewSet):
     queryset = Agent.objects.all()
