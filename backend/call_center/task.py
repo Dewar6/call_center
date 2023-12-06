@@ -1,10 +1,10 @@
-# from celery import shared_task
+from celery import shared_task
 
 import random
 
 from call_center.models import Agent
 
-# @shared_task
+@shared_task
 def agents_mood():
     agents = Agent.objects.all()
     for agent in agents:
