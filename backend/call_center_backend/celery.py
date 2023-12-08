@@ -11,3 +11,4 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.broker_url = 'pyamqp://guest:guest@localhost//'
 
 app.autodiscover_tasks()
+
