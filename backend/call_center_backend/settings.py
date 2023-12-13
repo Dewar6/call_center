@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'call_center',
 ]
 
@@ -125,13 +125,21 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CELERY_BROKER_URL = 'pyamqp://guest:guest@localhost:5672//'
-CELERY_RESULT_BACKEND = 'rpc://'
-
-CELERY_ACCEPT_CONTENT = ['json']
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'rpc://guest:guest@localhost:5672/'
+CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24  
+
+
+# CELERY_BEAT_SCHEDULE = {
+#     'run-every-3-seconds': {
+#         'task': 'call_center.tasks.add',
+#         'schedule': 3.0,
+#         'args': (4, 4)
+#     },
+# }
 
 CELERY_BEAT_SCHEDULE = {
     'run-every-3-seconds': {
